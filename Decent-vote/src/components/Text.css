@@ -1,0 +1,67 @@
+*{
+    box-sizing: border-box;
+  }
+ 
+  .app{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+  }
+  .title{
+    font-size: 80px;
+    background: -webkit-linear-gradient(rgb(236, 222, 222), rgb(248, 15, 132));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+  }
+  .app span{
+    font-size: 3rem;
+    color: white;
+    font-weight: 600;
+    text-shadow: 2px 2px #8bc7f0;
+  }
+  
+  /* buttons */
+  .buttons{
+    padding-top: 50px;
+    display: flex;
+    flex-direction: row;
+  }
+  
+  button {
+     margin: 10px;
+     padding: 20px 45px;
+     text-align: center;
+     text-transform: uppercase;
+     transition: 0.5s;
+     background-size: 200% auto;
+     color: white;            
+     box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.5);
+     border-radius: 30px;
+     display: block;
+     border: none;
+     outline: hidden;
+     cursor: pointer;
+   }
+  
+   .btn-pink {
+    background-image: linear-gradient(to right, #FF512F 0%, #DD2476  51%, #FF512F  100%)}
+  
+   .btn-pink:hover {
+     background-position: right center; /* change the direction of the change here */
+     color: #fff;
+     text-decoration: none;
+   }
+  
+   .btn-purple {background-image: linear-gradient(to right, #614385 0%, #516395  51%, #614385  100%)}
+    
+   .btn-purple:hover {
+      background-position: right center; /* change the direction of the change here */
+      color: #fff;
+      text-decoration: none;
+    }
+   
