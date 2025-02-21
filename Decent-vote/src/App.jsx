@@ -17,6 +17,8 @@ import Dovote from "./pages/Votingpage";
 import Resultpage from "./pages/Result"
 import Try from "./pages/Try";
 import ThankYou from "./pages/Thankyou";
+import CandidatesPage from "./pages/Votingpage";
+
 function App() {
   const [count, setCount] = useState(0);
   // const [message, setMessage] = useState('');
@@ -42,6 +44,7 @@ function App() {
         <Route path="/result" element = {<Resultpage/>} />
         <Route path="/try" element={<Try/>}/>
         <Route path="/thankyou" element ={<ThankYou/>} />
+        <Route path="/candidates" element={<CandidatesPage/>}/>
       </Routes>
     </>
   );

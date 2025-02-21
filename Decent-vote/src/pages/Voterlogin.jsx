@@ -1,36 +1,35 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Don't forget to import axios if you want to make HTTP requests
 
 const LoginPage = () => {
   const [uniqueId, setUniqueId] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
-  const [confirmationResult, setConfirmationResult] = useState(null);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Simulate sending OTP (you would replace this with an actual service)
-  const handleSendOTP = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
     if (!phoneNumber || !uniqueId) {
       setError('Please enter both Unique ID and Phone Number!');
       return;
     }
 
-    // Simulate sending OTP
-    const otp = '123456'; // You'd send this dynamically from a backend
-    setConfirmationResult(otp);
-    alert('OTP sent! Please check your phone.');
-  };
-
-  // Simulate OTP verification
-  const handleVerifyOTP = () => {
-    if (confirmationResult && verificationCode === confirmationResult) {
-      // After successful verification, navigate to the candidates list page
-    //   navigate(`/candidates/${uniqueId}`);
-    } else {
-      setError('Invalid OTP. Please try again.');
-      navigate("/vote");
-    }
+  
+    axios
+      .post("http://localhost:8000/api/voterauth", { "voters.voterId": uniqueId, voterPhone: phoneNumber },{withCredentials:true})
+      .then((response) => {
+        console.log(response.data);
+        
+          console.log("you will move to voiting page")
+          navigate("/candidates");
+        
+      })
+      .catch((err) => {
+        setError("Authentication failed. Please try again.");
+        console.error("Error:", err);
+      });
   };
 
   return (
@@ -64,33 +63,12 @@ const LoginPage = () => {
 
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-        {confirmationResult === null ? (
-          <button
-            onClick={handleSendOTP}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg text-lg font-semibold transition duration-200"
-          >
-            Send OTP
-          </button>
-        ) : (
-          <>
-            <div className="mb-6">
-              <input
-                type="text"
-                placeholder="Enter OTP"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg text-lg"
-              />
-            </div>
-
-            <button
-              onClick={handleVerifyOTP}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg text-lg font-semibold transition duration-200"
-            >
-              Verify OTP
-            </button>
-          </>
-        )}
+        <button
+          onClick={handleSubmit}
+          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg text-lg font-semibold transition duration-200"
+        >
+          Login
+        </button>
       </div>
     </div>
   );

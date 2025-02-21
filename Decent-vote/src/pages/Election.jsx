@@ -1,17 +1,33 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const ElectionPage = () => {
   const [uniqueId, setUniqueId] = useState('');
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();
   
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
     if (uniqueId === '') {
       setError('Please enter a valid Unique ID!');
-    } else {
-      setError('');
-      // Navigate to the ongoing election page or handle the unique ID verification logic here
-      console.log(`Opening election page for ID: ${uniqueId}`);
     }
+
+    axios.post("http://localhost:8000/api/election", {uniqueId}, {withCredentials:true})
+    .then((response) => {
+      console.log(response.data)
+      navigate("/voterlogin")
+    })
+    
+    .catch((err) =>{
+      // setError(err);
+      alert("There is an error")
+      console.log(err)
+      
+      // console.log(`Opening election page for ID: ${uniqueId}`);
+    })
   };
 
   return (
@@ -23,6 +39,7 @@ const ElectionPage = () => {
           <label htmlFor="uniqueId" className="block text-gray-700 font-medium mb-2">Enter Your Unique ID</label>
           <input
             type="text"
+            // name='electionId'
             id="uniqueId"
             value={uniqueId}
             onChange={(e) => setUniqueId(e.target.value)}
@@ -33,13 +50,14 @@ const ElectionPage = () => {
 
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-         <a href="/voterlogin"><button
+         {/* <a href="/voterlogin"> */}
+         <button
           onClick={handleSubmit}
           className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg text-lg font-semibold transition duration-200"
         >
           Open Election
         </button>
-        </a> 
+        {/* </a>  */}
 
         <div className="text-center mt-6 text-sm">
           <p className="text-gray-600">

@@ -1,91 +1,96 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie'; 
+const CandidatesPage = () => {
+  const [candidates, setCandidates] = useState([]);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-// const Dovote = () => {
-//   const { uniqueId } = useParams();
-//   const [candidates, setCandidates] = useState([]);
-//   const [voted, setVoted] = useState(false);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState('');
-//   const navigate = useNavigate();
+  useEffect(() => {
+    const votingFormId = Cookies.get('electionid'); 
+    console.log(`this is the votingformid ${votingFormId}`)
 
-//   // Fetch candidates from the backend
-//   useEffect(() => {
-//     const fetchCandidates = async () => {
-//       try {
-//         // Replace with your actual API URL
-//         const response = await axios.get(`/api/candidates?uniqueId=${uniqueId}`);
-//         setCandidates(response.data); // Assuming the backend sends a list of candidates
-//         setLoading(false);
-//       } catch (err) {
-//         setError('Failed to load candidates');
-//         setLoading(false);
-//         console.error(err);
-//       }
-//     };
+    if (!votingFormId) {
+      setError('Voting Form ID not found!');
+      return;
+    }
 
-//     fetchCandidates();
-//   }, [uniqueId]);
+    axios
+      .get(`http://localhost:8000/api/candidates/${votingFormId}`, {withCredentials:true})
+      .then((response) => {
+        if (response.data.success) {
+          setCandidates(response.data.candidates);
+        }
+      })
+      .catch((err) => {
+        setError('Failed to load candidates. Please try again later.');
+        console.error(err);
+      });
+  }, []); 
 
-//   const handleVote = (candidateId) => {
-//     if (!voted) {
-//       // Send the vote data to the server (API call, etc.)
-//       console.log(`Voted for Candidate ID: ${candidateId}`);
-//       alert(`Thank you for voting! You voted for Candidate ${candidateId}`);
-//       setVoted(true);
+  const handleVote = (candidateId) => {
+    const votingFormId = Cookies.get('electionid');  
 
-//       // Simulate session expiry
-//       setTimeout(() => {
-//         alert('Session expired');
-//         navigate('/');
-//       }, 5000); // Expire session after 5 seconds
-//     } else {
-//       alert('You have already voted!');
-//     }
-//   };
+    if (!votingFormId) {
+      setError('Voting Form ID not found!');
+      return;
+    }
 
-//   if (loading) {
-//     return <div className="text-center">Loading candidates...</div>;
-//   }
+    // Update the vote count (You would typically send a request to the backend to update the vote)
+    axios
+      .put(`http://localhost:8000/api/vote/${candidateId}`, {
+        votingFormId: votingFormId,  
+      }, {withCredentials:true})
+      .then((response) => {
+       
+        if (response.data.success) {
+          navigate("/thankyou",{state:{message:"Your vote has been successfully added."}});
+        }
+      })
+      .catch((err) => {
+        console.error("Error casting vote:", err);
+        setError("Failed to cast vote. Please try again later.");
+      });
+  };
 
-//   if (error) {
-//     return <div className="text-center text-red-500">{error}</div>;
-//   }
+  return (
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-96">
+        <h2 className="text-2xl font-semibold text-center text-blue-600 mb-4">Candidates</h2>
 
-//   return (
-//     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8">
-//       <h2 className="text-2xl font-semibold text-center text-blue-600 mb-4">Election - Unique ID: {uniqueId}</h2>
-//       <p className="text-lg text-gray-700 mb-8">Choose a candidate and cast your vote.</p>
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-//         {candidates.map((candidate) => (
-//           <div key={candidate.id} className="bg-white p-6 rounded-lg shadow-lg text-center">
-//             <img
-//               src={candidate.logoUrl} 
-//               alt={candidate.name}
-//               className="w-24 h-24 mx-auto mb-4 rounded-full"
-//             />
-//             <h3 className="text-xl font-semibold text-gray-800">{candidate.name}</h3>
-//             <button
-//               onClick={() => handleVote(candidate.id)}
-//               className="mt-4 bg-transparent border-2 border-blue-600 text-blue-600 py-2 px-4 rounded-lg text-lg font-semibold transition duration-200 hover:bg-blue-600 hover:text-white"
-//             >
-//               Vote Now
-//             </button>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
+        <table className="table-auto w-full mb-4">
+          <thead>
+            <tr>
+              <th className="border px-4 py-2">Name</th>
+              <th className="border px-4 py-2">Party</th>
+              <th className="border px-4 py-2">Symbol</th>
+              <th className="border px-4 py-2">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {candidates.map((candidate) => (
+              <tr key={candidate._id}>
+                <td className="border px-4 py-2">{candidate.memberName}</td>
+                <td className="border px-4 py-2">{candidate.partyName}</td>
+                <td className="border px-4 py-2">{candidate.symbol}</td>
+                <td className="border px-4 py-2">
+                  <button
+                    onClick={() => handleVote(candidate._id)}
+                    className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-lg"
+                  >
+                    Vote
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
 
-const Dovote = () => {
-    return(
-        <>
-        <div>
-            hello world</div></>
-    )
-}
-
-export default Dovote;
+export default CandidatesPage;

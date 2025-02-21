@@ -1,24 +1,18 @@
 import React, { useState } from 'react';
-import { Bar } from 'react-chartjs-2'; // For bar chart visualization
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Bar, Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import axios from 'axios';
 
-// Register chart.js components
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
 const ResultPage = () => {
-  const [electionId, setElectionId] = useState('');
-  const [candidates] = useState([
-    { name: 'Candidate A', votes: 120 },
-    { name: 'Candidate B', votes: 85 },
-    { name: 'Candidate C', votes: 60 },
-    { name: 'Candidate D', votes: 30 },
-  ]);
-
+  const [uniqueId, setUniqueId] = useState('');
+  const [candidates, setCandidates] = useState([]);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Static data for the bar chart
-  const data = {
-    labels: candidates.map((candidate) => candidate.name),
+  const dataBar = {
+    labels: candidates.map((candidate) => candidate.memberName),
     datasets: [
       {
         label: 'Votes',
@@ -30,17 +24,55 @@ const ResultPage = () => {
     ],
   };
 
-  const handleElectionIdChange = (e) => {
-    setElectionId(e.target.value);
+  const dataPie = {
+    labels: candidates.map((candidate) => candidate.memberName),
+    datasets: [
+      {
+        label: 'Votes',
+        data: candidates.map((candidate) => candidate.votes),
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(255, 99, 132, 0.7)',
+          'rgba(54, 162, 235, 0.7)',
+          'rgba(255, 159, 64, 0.7)',
+        ],
+        borderColor: [
+          'rgba(75, 192, 192, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 159, 64, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ],
   };
 
-  const handleSearch = () => {
-    if (electionId === '') {
-      setError('Please enter a valid Election ID.');
-    } else {
-      setError('');
-      // Add logic to fetch results based on the electionId if necessary
-      console.log('Searching for election ID:', electionId);
+  const handleUniqueIdChange = (e) => {
+    setUniqueId(e.target.value);
+  };
+
+  const handleSearch = async () => {
+    if (uniqueId === '') {
+      setError('Please enter a valid Unique ID.');
+      return;
+    }
+    
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post('http://localhost:8000/api/result', { uniqueId }, { withCredentials: true });
+
+      if (response.data.success) {
+        setCandidates(response.data.candidates);
+      } else {
+        setError('No results found for this Unique ID.');
+      }
+    } catch (err) {
+      setError('There was an error fetching the election results. Please try again.');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -48,43 +80,49 @@ const ResultPage = () => {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8">
       <h2 className="text-3xl font-semibold text-center text-blue-600 mb-4">Election Results</h2>
       <p className="text-lg text-gray-700 mb-8 text-center">
-        Enter the Election ID to see the results of the ongoing election.
+        Enter the Unique ID to see the results of the ongoing election.
       </p>
 
-      {/* Election ID Input Field */}
       <div className="w-full max-w-xs mb-6">
         <input
           type="text"
-          placeholder="Enter Election ID"
-          value={electionId}
-          onChange={handleElectionIdChange}
+          id="uniqueId"
+          placeholder="Enter Unique ID"
+          value={uniqueId}
+          onChange={handleUniqueIdChange}
           className="w-full p-3 border border-gray-300 rounded-lg text-lg mb-4"
         />
         <button
           onClick={handleSearch}
           className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg text-lg font-semibold transition duration-200"
         >
-          Search
+          {isLoading ? 'Loading...' : 'Search'}
         </button>
         {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
       </div>
 
-      {/* Election Results Chart */}
-      <div className="max-w-4xl w-full mt-8">
-        <div className="mb-6">
-          <h3 className="text-2xl font-semibold text-blue-600 mb-4">Election Results Overview</h3>
-          <p className="text-lg text-gray-700">
-            The results of the election are as follows. The chart below shows the total number of votes
-            each candidate has received in this election.
-          </p>
-        </div>
+      {candidates.length > 0 && (
+        <div className="max-w-4xl w-full mt-8">
+          <div className="mb-6">
+            <h3 className="text-2xl font-semibold text-blue-600 mb-4">Election Results Overview</h3>
+            <p className="text-lg text-gray-700">
+              The results of the election are as follows. The charts below show the total number of votes
+              each candidate has received in this election.
+            </p>
+          </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
-          <Bar data={data} options={{ responsive: true }} />
-        </div>
-      </div>
+          <div className="bg-white p-6 rounded-lg shadow-lg mt-6 mb-8">
+            <h4 className="text-xl font-semibold text-blue-600 mb-4">Bar Chart: Votes Overview</h4>
+            <Bar data={dataBar} options={{ responsive: true }} />
+          </div>
 
-      {/* Election Overview Text */}
+          <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
+            <h4 className="text-xl font-semibold text-blue-600 mb-4">Pie Chart: Votes Distribution</h4>
+            <Pie data={dataPie} options={{ responsive: true }} />
+          </div>
+        </div>
+      )}
+
       <div className="mt-8 text-center text-gray-600">
         <p className="text-lg">Election Overview:</p>
         <p className="mt-4">

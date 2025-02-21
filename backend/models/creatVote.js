@@ -6,7 +6,8 @@ const candidateSchema = new mongoose.Schema(
   {
     memberName: { type: String, },
     partyName: { type: String,  },
-    symbol: { type: String,     }
+    symbol: { type: String,     },
+    votes: { type: Number, default: 0 },
   },
 );
 
@@ -18,7 +19,7 @@ const voterSchema = new mongoose.Schema(
     voterIed: { type: String,  index:false},
     
   },
-  {_id:false  }
+  
   
 );
 
