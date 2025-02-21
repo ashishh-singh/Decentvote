@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const VotingForm = () => {
   const [candidates, setCandidates] = useState([{ memberName: '', partyName: '', symbol: '' }]);
-  const [voters, setVoters] = useState([{ voterName: '', voterPhoneNumber: '', voterId: '' }]);
+  const [voters, setVoters] = useState([{ voterName: '', voterPhoneNumber: '', voterIed: '' }]);
   const navigate = useNavigate();  
 
 
@@ -28,7 +28,7 @@ const VotingForm = () => {
 
 
   const addVoter = () => {
-    setVoters([...voters, { voterName: '', voterPhoneNumber: '', voterId: '' }]);
+    setVoters([...voters, { voterName: '', voterPhoneNumber: '', voterIed: '' }]);
   };
 
  
@@ -44,8 +44,8 @@ const VotingForm = () => {
     axios.post('http://localhost:8000/api/Vote', formData)
       .then((response) => {
         console.log('Voting form created:', response.data);
-        
-        navigate('/thankyou');
+        alert("Election conducted succesfully")
+        navigate('/thankyou', { state: { voteId: response.data.id } });
       })
       .catch((error) => {
         console.error('Error submitting form:', error);
@@ -112,7 +112,7 @@ const VotingForm = () => {
                   className="flex-1 p-3 border-b-2 border-green-500 focus:outline-none"
                 />
                 <input
-                  type="tel"
+                  type="text"
                   name="voterPhoneNumber"
                   placeholder="Voter Phone Number"
                   value={voter.voterPhoneNumber}
@@ -121,9 +121,9 @@ const VotingForm = () => {
                 />
                 <input
                   type="text"
-                  name="voterId"
+                  name="voterIed"
                   placeholder="Voter Unique ID"
-                  value={voter.voterId}
+                  value={voter.voterIed}
                   onChange={(e) => handleVoterChange(index, e)}
                   className="flex-1 p-3 border-b-2 border-green-500 focus:outline-none"
                 />

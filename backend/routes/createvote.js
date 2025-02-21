@@ -1,31 +1,40 @@
 const express = require("express")
 const router = express.Router();
-const {candidate, voter} = require("../models/creatVote")
+const {candidate, voter, VotingForm} = require("../models/creatVote")
 
 router.post("/Vote", async (req,res)=> {
-    const body = req.body;
-    console.log("insdie the route")
+    const {candidates, voters} = req.body;
+    // const body = req.body
+    // console.log("insdie the route", memberName, partyName, symbol, voterName, voterId, voterPhoneNumber)
+    console.log("inside the block", candidates, voters)
     try{
 
-        const vote = await voter.create({
-            memberName:body.memberName,
-            partyName:body.partyName,
-            symbol:body.symbol,
+        // const vote = await voter.create({
+        //     memberName:memberName,
+        //     partyName:partyName,
+        //     symbol:symbol,
+    
+        // })
+        const voteForm = await VotingForm.create({
+            candidates,
+            voters,
     
         })
 
-        const Candidate = await candidate.create({
-            voterName:body.voterName,
-            contact:body.voterPhoneNumber,
-            voterId:body.voterId
-        })
+        // const Candidate = await candidate.create({
+        //     voterName:voterName,
+            
+        //     voterId:voterId,
+        //     contact:voterPhoneNumber,
+        // })
 
-        console.log("inside the try block")
-        if(vote && Candidate){
+        console.log("inside the try block",voteForm)
+        if(voteForm){
             return res.status(201).json({
                 success:true,
-                message:"user is created ",
-                user:user
+                message:"vote is created ",
+                voteForm:voteForm,
+                id: voteForm._id
             });
         }
         else{

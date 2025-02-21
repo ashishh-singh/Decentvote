@@ -313,7 +313,6 @@ function VerificationForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Make an API call to the backend
     axios
     .post("http://localhost:8000/api/createvote", formData)
     .then((response) => {
