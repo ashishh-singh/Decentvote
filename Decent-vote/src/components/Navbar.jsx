@@ -1,8 +1,9 @@
-import React, { useState } from "react"
-import { Route, Link } from "react-router-dom"
+import React, { useState } from "react";
+import { Route, Link } from "react-router-dom";
+import { MdContactPhone } from "react-icons/md";
 
 export default function NavbarIcons() {
-  const [isToggleOpen, setIsToggleOpen] = useState(false)
+  const [isToggleOpen, setIsToggleOpen] = useState(false);
 
   return (
     <>
@@ -22,26 +23,25 @@ export default function NavbarIcons() {
               className="flex items-center gap-2 whitespace-nowrap py-3 text-lg focus:outline-none lg:flex-1"
               href="javascript:void(0)"
             >
-               <svg
+              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                className="mr-3 h-8 w-8">
-                <path
-                  d="M12.378 1.602a.75.75 0 00-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 00.372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 00.372.648l8.628 5.033z" />
+                className="mr-3 h-8 w-8"
+              >
+                <path d="M12.378 1.602a.75.75 0 00-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 00.372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 00.372.648l8.628 5.033z" />
               </svg>
-            <h1 className="font-2xl text-emerald-500 font-bold">
-              <Link to="/">Decent-Vote</Link>
+              <h1 className="font-2xl text-emerald-500 font-bold">
+                <Link to="/">Decent-Vote</Link>
               </h1>
             </a>
             {/*      <!-- Mobile trigger --> */}
             {/* daisy */}
-            
-   
+
             {/* <div className="form-control">
       <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
     </div> */}
-      {/* daisyui */}
+            {/* daisyui */}
             <button
               className={`relative order-10 block h-10 w-10 self-center lg:hidden
               ${
@@ -131,7 +131,9 @@ export default function NavbarIcons() {
                     />
                   </svg>
 
-                  <span><a href="/election">Election</a></span>
+                  <span>
+                    <a href="/election">Election</a>
+                  </span>
                 </a>
               </li>
               <li role="none" className="flex items-stretch">
@@ -168,36 +170,24 @@ export default function NavbarIcons() {
                   className="flex items-center gap-2 py-4 transition-colors duration-300 hover:text-emerald-500 focus:text-emerald-600 focus:outline-none focus-visible:outline-none lg:px-8"
                   href="/contact"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="h-5 w-5"
-                    aria-label="Menu item icon"
-                    role="graphics-symbol"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
-                    />
-                  </svg>
+                  <MdContactPhone className="h-5 w-5" />
 
                   <Link to={"/contact"}>Contact</Link>
                 </a>
               </li>
             </ul>
             <div className="ml-auto flex items-center px-6 lg:ml-0 lg:p-0">
-             <a href="/result"> <button className="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded bg-emerald-500 px-5 text-sm font-medium tracking-wide text-white shadow-md shadow-emerald-200 transition duration-300 hover:bg-emerald-600 hover:shadow-sm hover:shadow-emerald-200 focus:bg-emerald-700 focus:shadow-sm focus:shadow-emerald-200 focus-visible:outline-none disabled:cursor-not-allowed disabled:border-emerald-300 disabled:bg-emerald-300 disabled:shadow-none">
-                <span>Result</span> 
-              </button>  </a> 
+              <a href="/result">
+                {" "}
+                <button className="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded bg-emerald-500 px-5 text-sm font-medium tracking-wide text-white shadow-md shadow-emerald-200 transition duration-300 hover:bg-emerald-600 hover:shadow-sm hover:shadow-emerald-200 focus:bg-emerald-700 focus:shadow-sm focus:shadow-emerald-200 focus-visible:outline-none disabled:cursor-not-allowed disabled:border-emerald-300 disabled:bg-emerald-300 disabled:shadow-none">
+                  <span>Result</span>
+                </button>{" "}
+              </a>
             </div>
           </nav>
         </div>
       </header>
       {/*<!-- End Navbar with Icons --> */}
     </>
-  )
+  );
 }
