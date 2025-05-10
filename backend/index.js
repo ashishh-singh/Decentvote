@@ -1,7 +1,8 @@
+require('dotenv').config()
 const express = require("express")
 const app = express()
 const cors = require("cors")
-const port = process.env.port||8000;
+const port = process.env.port //|| 8000;
 const mongo = require("mongoose")
 const bodyparser = require("body-parser")
 const useRoute = require("./routes/usercreate")
@@ -30,7 +31,9 @@ app.use(cookieParser())
 
 
 // mongodb
-const mongoURl = "mongodb+srv://autophileashish:myaccount@decent-vote.srt5x.mongodb.net/"
+const mongoURl = process.env.mongoURl //|| //"mongodb+srv://autophileashish:myaccount@decent-vote.srt5x.mongodb.net/"
+
+// const mongoURl = "mongodb+srv://autophileashish:myaccount@decent-vote.srt5x.mongodb.net/"
 // mongo.connect("mongodb://localhost:27017/Decent-vote").then(()=> console.log("Database is connected successfully")).catch((err)=> console.log(err))
 mongo.connect(mongoURl, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connected to MongoDB Atlas"))
