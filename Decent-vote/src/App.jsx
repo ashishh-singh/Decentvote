@@ -21,12 +21,6 @@ import CandidatesPage from "./pages/Votingpage";
 
 function App() {
   const [count, setCount] = useState(0);
-  // const [message, setMessage] = useState('');
-  // const [dataResponse, setDataResponse] = useState('');
-
-  // useEffect(()=> {
-  //   axios.get('http://localhost:8000').then(respons=>{setMessage(response.data.message)}).catch(err=>{console.log("these was an error", err)});
-  // },[]);
 
 
   return (

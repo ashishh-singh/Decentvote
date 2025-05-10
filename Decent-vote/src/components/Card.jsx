@@ -4,7 +4,7 @@ export default function Card({title, content}) {
   return (
     <>
       {/*<!-- Component: Card with icon --> */}
-      <div className="overflow-hidden text-center bg-blue-200 rounded-xl m-5 shadow-md text-slate-500 shadow-slate-200 h-80">
+      <div className="overflow-hidden text-center bg-gray-100 rounded-xl m-5 shadow-lg text-slate-500  h-96">
        
         <figure className="p-6 pb-0">
           <svg
@@ -28,14 +28,14 @@ export default function Card({title, content}) {
         </figure>
     
         <div className="p-6">
-          <h3 className="mb-4 text-xl font-medium text-slate-700">{title}</h3>
-          <p>
+          <h3 className="mb-2 text-xl font-medium text-slate-700">{title}</h3>
+          <p className="text-slate-500 h-1/2">
             {content}
           </p>
          
         </div>
        
-        <a href="/userverification"> <button className="btn primary bg-emerald-500 w-[90%]"> Click  </button>  </a>
+        <a href="/userverification"> <button className="btn hover:bg-emerald-600 bg-emerald-500 w-[90%] text-white font-semibold text-md"> Start Vote  </button>  </a>
         {/* <button className="btn btn-outline btn-secondary">Secondary</button> */}
            
                 
