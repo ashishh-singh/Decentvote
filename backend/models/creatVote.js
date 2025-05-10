@@ -17,7 +17,8 @@ const voterSchema = new mongoose.Schema(
     voterName: { type: String,  },
     voterPhoneNumber: {type: String,},
     voterIed: { type: String,  index:false},
-    
+    isvote: { type: Number, default: 0 },
+
   },
   
   
